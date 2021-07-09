@@ -1,9 +1,11 @@
 from View.capture_screen import Capture_Screen
 from View.analysis_screen import Analysis_Screen
 from Model.process_video import Video_Processor
-from Model.swing_analyzer import Swing_Analyzer
+from Model.swing_divider import Swing_Divider
 from Model.golferClass import Golfer
 from Model.video_writer import Video_Writer
+from Model.build_csv import CSV_Creator
+from Model.make_detections_using_model import MakeDetections
 import threading
 import time
 import logging
@@ -17,8 +19,27 @@ class Controller:
         
     
     def analyze_video(self, filename):
+        #Read in the video and analyze the swing for data points
         video_processor = Video_Processor("generatedVideos/" + filename + ".avi", True)
         video_processor.read_video("full_swing")
+
+        # Load the points into the golfer class
+        golfer = Golfer(video_processor.points_frames)
+        # Load in a  new video processor to split the video into frames
+        new_video_processor = Video_Processor("generatedVideos/toProcess.avi")
+        frames = new_video_processor.slice_video()
+
+        # Load in a video splitter and pass in the frames and the golfer points.
+        video_splitter = Swing_Divider(golfer, frames)
+        video_splitter.slice_video("user_videos")
+
+        #csv_writer = CSV_Creator(golfer.get_golfer())
+        #csv_writer.generate_csv("swing.csv")
+
+        # Make machine learning detections
+        swing_model = MakeDetections("user_videos")
+        print(swing_model.detections)
+
         self.screen = Analysis_Screen(self.root, "generatedVideos/full_swing.avi")
         logging.info("Thread is closed")
 
