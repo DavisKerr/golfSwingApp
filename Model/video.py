@@ -5,10 +5,10 @@ class Video:
     def __init__(self, video_source, dim=(400,400)):
         # Open the video source
         self.vid = cv.VideoCapture(video_source)
-
+    
         if not self.vid.isOpened():
             raise ValueError("Unable to open video source", video_source)
- 
+    
         # Get video source width and height
         self.width = self.vid.get(cv.CAP_PROP_FRAME_WIDTH)
         self.height = self.vid.get(cv.CAP_PROP_FRAME_HEIGHT)

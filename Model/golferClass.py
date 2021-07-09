@@ -23,3 +23,6 @@ class Golfer:
 
     def get_point(self, point, frame):
         return self.body[point][frame]
+    
+    def get_golfer(self):
+        return self.body
