@@ -56,7 +56,7 @@ class Video_Processor:
             points, frameCopy = self.get_points(output, frameWidth, frameHeight, W, H, frameCopy)
             self.points_frames.append(points)
             frame = self.draw_skeleton(points, frame, t)
-            cv.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv.LINE_AA)
+            #cv.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv.LINE_AA)
 
             vid_writer.write(frame)
 
@@ -77,7 +77,7 @@ class Video_Processor:
                 cv.putText(frameCopy, "{}".format(i), (int(x), int(y)), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, lineType=cv.LINE_AA)
 
                 points.append((int(x), int(y)))
-            else :
+            else:
                 points.append(None)
 
         return points, frameCopy
