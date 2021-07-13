@@ -6,6 +6,8 @@ from Model.golferClass import Golfer
 from Model.video_writer import Video_Writer
 from Model.build_csv import CSV_Creator
 from Model.make_detections_using_model import MakeDetections
+from Model.calculate_score import EvaluateSwing
+from Model.feedback import GiveFeedback
 import threading
 import time
 import logging
@@ -37,10 +39,14 @@ class Controller:
         #csv_writer.generate_csv("swing.csv")
 
         # Make machine learning detections
-        swing_model = MakeDetections("user_videos")
-        print(swing_model.detections)
+        swing_scorer = EvaluateSwing()
+        score = swing_scorer.process_probabilities("user_videos")
+        
+        feedback_giver = GiveFeedback(score)
 
-        self.screen = Analysis_Screen(self.root, "generatedVideos/full_swing.avi")
+        feedback = (feedback_giver.get_setup(), feedback_giver.get_bswing(), feedback_giver.get_fswing())
+
+        self.screen = Analysis_Screen(self.root, "generatedVideos/full_swing.avi", feedback)
         logging.info("Thread is closed")
 
     def change_window(self, frames, recording):
