@@ -1,3 +1,4 @@
+from tkinter.constants import END
 from View.double_slider import Double_Slider
 import tkinter as tk
 import PIL
@@ -7,11 +8,13 @@ from Model.video import Video
 
 class Analysis_Screen(tk.Toplevel):
 
-    def __init__(self, master, filename, thread=None):
+    def __init__(self, master, filename, feedback, thread=None):
         tk.Toplevel.__init__(self, master)
         self.filename = filename
         self.title("Golf Analyzer")
         self.iconbitmap("Images/Golf.ico")
+        self.feedback = feedback
+
 
         self.vid = Video(self.filename)
         self.frames = self.vid.get_video()
@@ -66,21 +69,31 @@ class Analysis_Screen(tk.Toplevel):
  
         self.play_btn = tk.Button(self, text="Play", command=self.play)
         self.pause_btn = tk.Button(self, text="Pause", command=self.pause)
-        self.prev_btn = tk.Button(self, text="Prev")
-        self.next_btn = tk.Button(self, text="Next")
         self.video_slider = Double_Slider(self, self.change_frame, num_bars=1, max_val=self.max_frame)
         self.advice_label = tk.Label(self, text="Analysis:")
         self.advice_list = tk.Listbox(self, height=6, width=60)
 
-        self.advice_list.insert(1, "Your setup was evaluated as average with an accuracy of 0.75.")
-        self.advice_list.insert(2, "Your backswing was evalauted as poor with an accuracy of 0.43.")
-        self.advice_list.insert(3, "Your swing was evaluated as Good with an accuracy of 0.39.")
-        self.advice_list.insert(4, "Your overall golf swing was rated as a grade B.")
+        counter = 1
+        for advice in self.feedback:
+            sentence = advice.split()
+            line = ''
+            for end, word in enumerate(sentence):
+                
+                if len(line) > 50 or end + 1 == len(sentence):
+                    line = line + " " + word
+                    print(line)
+                    self.advice_list.insert('end', line)
+                    line = ""
+                    counter += 1
+                else:
+                    line = line + " " + word
+
+
+            
+        #self.advice_list.insert(4, "Your overall golf swing was rated as a grade B.")
 
         self.title.grid(row=1, column=3)
-        self.prev_btn.grid(row=4, column=1)
         self.video_display.grid(row=2, column=2, rowspan=3, columnspan=5)
-        self.next_btn.grid(row=4, column=7)
         self.play_btn.grid(row=7, column=2)
         self.pause_btn.grid(row=7, column=3)
         self.video_slider.grid(row=8, column=1, columnspan=5)
