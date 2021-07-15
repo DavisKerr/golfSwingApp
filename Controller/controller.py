@@ -4,7 +4,6 @@ from Model.process_video import Video_Processor
 from Model.swing_divider import Swing_Divider
 from Model.golferClass import Golfer
 from Model.video_writer import Video_Writer
-from Model.build_csv import CSV_Creator
 from Model.make_detections_using_model import MakeDetections
 from Model.calculate_score import EvaluateSwing
 from Model.feedback import GiveFeedback
@@ -14,13 +13,24 @@ import logging
 
 
 class Controller:
+    """
+    Controlls how the application runs. Moderates how the Model and View interact. 
+    """
+
 
     def __init__(self, root):
+        """
+        Initializes the controller. The root is the tkinter GUI controller.
+        Screen1 is the first screen to display to the user.
+        """
         self.root = root
         self.screen1 = Capture_Screen(self.root, self.change_window)
         
     
     def analyze_video(self, filename):
+        """
+        Analyzes the video and creates a new window to display the feedback.
+        """
         #Read in the video and analyze the swing for data points
         video_processor = Video_Processor("generatedVideos/" + filename + ".avi", True)
         video_processor.read_video("full_swing")
@@ -50,6 +60,10 @@ class Controller:
         logging.info("Thread is closed")
 
     def change_window(self, frames, recording):
+        """
+        Opens a new window, if the app is not recording, with the analysis of the golf swing. It opens a new
+        thread to process the video before opening the new window.
+        """
         if not recording and frames:
             writer = Video_Writer(frames)
             filename = "toProcess"
