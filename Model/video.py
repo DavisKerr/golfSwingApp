@@ -2,6 +2,9 @@ import cv2 as cv
 from Model.video_writer import Video_Writer
 
 class Video:
+    """
+    Uses OpenCV to break videos into frames and return them.
+    """
     def __init__(self, video_source, dim=(400,400)):
         # Open the video source
         self.vid = cv.VideoCapture(video_source)
@@ -18,6 +21,9 @@ class Video:
         self.recorded_video = []
     
     def rescaleFrame(self, frame, scale=0.75):
+        """
+        Rescales a video frame.
+        """
         width = (int)(frame.shape[1] * scale)
         height = (int)(frame.shape[0] * scale)
 
@@ -27,6 +33,9 @@ class Video:
 
     
     def get_frame(self):
+        """
+        Gets a frame from a live video using a webcam.
+        """
         if self.vid.isOpened() and self.video_source == 0:
             ret, frame = self.vid.read()
             if ret:
@@ -41,13 +50,22 @@ class Video:
             return (ret, None)
     
     def save_video(self, filename):
+        """
+        Writes a video from the frames collected, typically from a live video.
+        """
         writer = Video_Writer(self.recorded_video)
         writer.write_video(filename)
 
     def load_video(self):
+        """
+        Loads a video from source.
+        """
         return cv.VideoCapture(self.video_source)
 
     def get_video(self):
+        """
+        Returns a collection of frames in a list.
+        """
         frames = self.prepare_video()
         for i in range(len(frames)):
             frames[i] = cv.resize(frames[i], self.dim, interpolation = cv.INTER_AREA)
@@ -55,6 +73,9 @@ class Video:
         return frames
 
     def prepare_video(self):
+        """
+        Collects all the frames of a video in a list.
+        """
         cap = self.load_video()
         success, frame = cap.read()
         frames = []
@@ -65,5 +86,8 @@ class Video:
  
     # Release the video source when the object is destroyed
     def __del__(self):
+        """
+        releases the video if deleted.
+        """
         if self.vid.isOpened():
             self.vid.release()

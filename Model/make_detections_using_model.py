@@ -12,7 +12,10 @@ FORWARD_PKL_MODEL = "Pickle/forward.pkl"
 BACKWARD_PKL_MODEL = "Pickle/back.pkl"
 
 class MakeDetections:
-
+    """
+    Uses mediapipe and the pickle learning model to
+    analyze the golf swing in three part. 
+    """
     def __init__(self, videos_folder):
         """" Initialize the MakeDetections class.
         Params: videos_folder (directory of the folder with the videos to analyze)

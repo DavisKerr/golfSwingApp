@@ -6,6 +6,9 @@ import cv2 as cv
 import mediapipe as mp
 
 class Video_Capture:
+    """
+    Captures a video using OpenCV for the use of returning each frame. 
+    """
     def __init__(self, video_source=0, dim=(400,400)):
         # Open the video source
         self.vid = cv.VideoCapture(video_source)
@@ -19,6 +22,9 @@ class Video_Capture:
         self.dim = dim
 
     def rescaleFrame(self, frame, scale=0.75):
+        """
+        Rescales a frame. 
+        """
         width = (int)(frame.shape[1] * scale)
         height = (int)(frame.shape[0] * scale)
 
@@ -27,9 +33,15 @@ class Video_Capture:
         return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
 
     def load_video(self):
+        """
+        Loads the video from the source into OpenCV.
+        """
         return cv.VideoCapture(self.video_source)
 
     def get_frames(self):
+        """
+        Gets a list of frames from the video.
+        """
         cap = self.load_video()
         success, frame = cap.read()
         frames = []
@@ -39,6 +51,9 @@ class Video_Capture:
         return frames
 
     def get_frame(self):
+        """
+        Gets a frame from the source.
+        """
         if self.vid.isOpened():
             ret, frame = self.vid.read()
             frame = cv.resize(frame, self.dim, interpolation = cv.INTER_AREA)
@@ -53,5 +68,8 @@ class Video_Capture:
  
     # Release the video source when the object is destroyed
     def __del__(self):
+        """
+        releases the video if deleted.
+        """
         if self.vid.isOpened():
             self.vid.release() 

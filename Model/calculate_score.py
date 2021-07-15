@@ -4,12 +4,16 @@ from statistics import mean
 class EvaluateSwing:
 
     def __init__(self):
+    
         # ============
         self.all_evals = list() # The most important list here
         # =============
 
     def process_probabilities(self, folder):
-
+        """
+        Runs the function to run the videos through the model. It then 
+        returns the score for each part of the swing.
+        """
         makeDetections = MakeDetections(folder)
         detections_list = makeDetections.detections
 

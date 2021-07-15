@@ -1,5 +1,7 @@
 class Golfer:
-
+    """
+    Stores the points of the golfer's body frame by frame.
+    """
     def __init__(self, points_frames):
         self.body = dict({})
         self.body[0] = [] # Top of Head

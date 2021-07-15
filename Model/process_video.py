@@ -3,6 +3,9 @@ import numpy as np
 import time
 
 class Video_Processor:
+    """
+    Finds all the key points on a person in a video using the MPI openPose learning model.
+    """
 
     def __init__(self, video_source, net=False):
         self.nPoints = 15
@@ -16,6 +19,7 @@ class Video_Processor:
             self.net = self.create_net()
 
     def create_net(self):
+        """Initializes the learning model and loads it into the GPU if possible."""
         protoFile = "pose/mpi/pose_deploy_linevec_faster_4_stages.prototxt"
         weightsFile = "pose/mpi/pose_iter_160000.caffemodel"
         net = cv.dnn.readNetFromCaffe(protoFile, weightsFile)
@@ -27,12 +31,19 @@ class Video_Processor:
         return net
 
     def load_video(self):
+        """
+        Loads the video into OpenCV
+        """
         return cv.VideoCapture(self.video_source)
 
     def create_writer(self, destination, frame):
+        """Creates an openCV video writer."""
         return cv.VideoWriter(destination ,cv.VideoWriter_fourcc('M','J','P','G'), 10, (frame.shape[1],frame.shape[0]))
 
     def read_video(self, filename):
+        """
+        Reads the video and finds the points on the body.
+        """
         cap = self.load_video()
         hasFrame, frame = cap.read()
         vid_writer = self.create_writer("generatedVideos/" + filename + ".avi", frame)
@@ -63,6 +74,7 @@ class Video_Processor:
         vid_writer.release()
 
     def get_points(self, output, frameWidth, frameHeight, W, H, frameCopy):
+        """Puts the points into a list and returns it."""
         points = []
         for i in range(self.nPoints):
             probMap = output[0, i, :, :]
@@ -84,6 +96,9 @@ class Video_Processor:
 
 
     def draw_skeleton(self, points, frame, t):
+        """
+        Draws the skeleton on the frame of the video.
+        """
         for pair in self.POSE_PAIRS:
             partA = pair[0]
             partB = pair[1]
@@ -96,6 +111,9 @@ class Video_Processor:
         return frame
     
     def slice_video(self):
+        """
+        Cut the video on the specified frames.
+        """
         cap = self.load_video()
         success, frame = cap.read()
         frames = []
