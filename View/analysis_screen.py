@@ -7,7 +7,9 @@ from tkinter import filedialog
 from Model.video import Video
 
 class Analysis_Screen(tk.Toplevel):
-
+    """
+    The GUI for the analysis screen.
+    """
     def __init__(self, master, filename, feedback, thread=None):
         tk.Toplevel.__init__(self, master)
         self.filename = filename
@@ -29,13 +31,22 @@ class Analysis_Screen(tk.Toplevel):
         self.update()
 
     def pause(self):
+        """
+        Sets the video playback to false.
+        """
         self.is_playing = False
     
     def play(self):
+        """
+        Sets the video playback to true.
+        """
         if len(self.frames) > 0:
             self.is_playing = True
 
     def update_video(self):
+        """
+        Progresses the video by 1 frame. Runs every time the GUI updates.
+        """
         if not self.curr_frame < self.min_frame and not self.curr_frame > self.max_frame:
             frame = self.frames[self.curr_frame]
             self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
@@ -47,12 +58,18 @@ class Analysis_Screen(tk.Toplevel):
         self.video_slider.advance_slider(self.curr_frame)
 
     def update(self):
+        """
+        Updates the GUI every frame.
+        """
         if self.is_playing:
             self.update_video()
 
         self.after(self.delay, self.update)
 
     def load_video(self):
+        """
+        Loads a video.
+        """
         self.filename = self.get_filename()
         self.vid.__del__()
         self.vid = Video(self.filename)
@@ -60,9 +77,15 @@ class Analysis_Screen(tk.Toplevel):
         self.curr_frame = 0
     
     def change_frame(self, frame_numbers):
+        """
+        Restarts the video.
+        """
         self.curr_frame = frame_numbers[0]
 
     def build_window(self):
+        """
+        Build and layout the window.
+        """
         self.title = tk.Label(self, text="Whole Swing")
         
         self.video_display = tk.Canvas(self, width = 400, height = 400)

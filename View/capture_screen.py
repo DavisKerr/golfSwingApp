@@ -6,6 +6,9 @@ from tkinter import filedialog
 from Model.video import Video
 
 class Capture_Screen(tk.Toplevel):
+    """
+    The GUI for the capture screen.
+    """
 
     def __init__(self, master, new_window_func):
         tk.Toplevel.__init__(self, master)
@@ -45,18 +48,30 @@ class Capture_Screen(tk.Toplevel):
         self.play()
 
     def remove(self):
+        """
+        Deletes the window.
+        """
         self.window.destroy()
     
     def trim_video(self, values):
+        """
+        Changes the frames to play in the video.
+        """
         if not self.recording:
             self.min_frame = min(values)
             self.max_frame = max(values)
             self.curr_frame = self.min_frame
  
     def pause(self):
+        """
+        Sets the video playback to false.
+        """
         self.is_playing = False
 
     def record(self):
+        """
+        Starts recording and displaying video.
+        """
         print("Recording...")
         if not self.recording:
             self.recording = True
@@ -67,6 +82,9 @@ class Capture_Screen(tk.Toplevel):
                 self.recording = False
     
     def stop_recording(self):
+        """
+        Stops the recording and saves it.
+        """
         print("Stop Recording...")
         if self.recording:
             self.recording = False
@@ -74,6 +92,9 @@ class Capture_Screen(tk.Toplevel):
         
     
     def update_video(self):
+        """
+        Progresses the video by 1 frame. Runs every time the GUI updates.
+        """
         if not self.curr_frame < self.min_frame and not self.curr_frame > self.max_frame:
             frame = self.frames[self.curr_frame]
             self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
@@ -85,16 +106,25 @@ class Capture_Screen(tk.Toplevel):
         
 
     def update_recording(self):
+        """
+        Shows the current frame of the live video.
+        """
         ret, frame = self.vid.get_frame()
         if ret:
             self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
             self.video_display.create_image(0, 0, image = self.photo, anchor = tk.NW)
 
     def play(self):
+        """
+        Sets the video playback to true.
+        """
         if len(self.frames) > 0:
             self.is_playing = True
 
     def update(self):
+        """
+        Updates the GUI every frame.
+        """
         # Get a frame from the video source
         #ret, frame = self.vid.get_frame()
         if self.recording:
@@ -111,6 +141,9 @@ class Capture_Screen(tk.Toplevel):
         self.after(self.delay, self.update)    
 
     def build_window(self):
+        """
+        Build and layout the window.
+        """
         self.title = Label(self, text="Record and trim golf stroke video")
         
         self.video_display = tk.Canvas(self, width = 400, height = 400)
