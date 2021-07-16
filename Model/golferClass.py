@@ -24,7 +24,13 @@ class Golfer:
                 self.body[point].append(frame[point])
 
     def get_point(self, point, frame):
+        """
+        Returns the point at the specified frame.
+        """
         return self.body[point][frame]
     
     def get_golfer(self):
+        """
+        Returns all the body dictionary.
+        """
         return self.body
