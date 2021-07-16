@@ -4,7 +4,9 @@ from tkinter.ttk import *
 
 
 class Double_Slider(Frame):
-
+    """
+    Creates a double slider widget for Tkinter.
+    """
     # Global slider attributes
     LINE_COLOR = "#476b6b"
     LINE_WIDTH = 3
@@ -15,7 +17,9 @@ class Double_Slider(Frame):
     DIGIT_PRECISION = '.1f' # for showing in the canvas
 
     def __init__(self, master, on_change, width = 400, height = 80, min_val = 0, max_val = 1, show_value = True, num_bars=2):
-
+        """
+        Initializes the widget.
+        """
         Frame.__init__(self, master, height = height, width = width) # Create a new frame in Tkinter
         self.master = master
 
@@ -56,20 +60,32 @@ class Double_Slider(Frame):
             bar["Ids"] = self.__addBar(bar["Pos"])
 
     def resume(self, pos):
+        """
+        Lets the slider update again.
+        """
         self.on_change(self.getValues())
         self.using_slider = False
 
 
     def advance_slider(self, number):
+        """
+        Moves the slider to a particular number.
+        """
         if not number > self.max_val and not self.using_slider:
             pos = number / self.max_val
             self.__moveBar(0, pos)
 
     def getValues(self):
+        """
+        Gets the values of the slider.
+        """
         values = [round(bar["Value"]) for bar in self.bars]
         return sorted(values)
 
     def _mouseMotion(self, event):
+        """
+        Gets the position fo the mouse.
+        """
         x = event.x
         y = event.y
         selection = self.__checkSelection(x,y)
@@ -81,6 +97,9 @@ class Double_Slider(Frame):
             self.selected_idx = None
 
     def _moveBar(self, event):
+        """
+        Moves the bar to the mouse position.
+        """
         self.using_slider = True
         x = event.x
         y = event.y
@@ -91,10 +110,16 @@ class Double_Slider(Frame):
         self.__moveBar(idx,pos)
 
     def __addTrack(self, startx, starty, endx, endy):
+        """
+        Creates the slider track bar.
+        """
         id1 = self.canv.create_line(startx, starty, endx, endy, fill = Double_Slider.LINE_COLOR, width = Double_Slider.LINE_WIDTH)
         return id
 
     def __addBar(self, pos):
+        """
+        Creates a slider circle.
+        """
         """@ pos: position of the bar, ranged from (0,1)"""
         if pos <0 or pos >1:
             raise Exception("Pos error - Pos: "+str(pos))
@@ -114,6 +139,9 @@ class Double_Slider(Frame):
             return [id_outer, id_inner]
 
     def __moveBar(self, idx, pos):
+        """
+        Deletes the old bar and adds a new one in the new location.
+        """
         ids = self.bars[idx]["Ids"]
         for id in ids:
             self.canv.delete(id)
